@@ -1,13 +1,36 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define MAXN 2005
 
-int A[MAXN];
-long long dp[2 * MAXN + 1][MAXN];  // dp[k][x] = max sum with k coins, x adds
+int adj[MAXN][MAXN];     // Adjacency list
+int degree[MAXN];        // Degree to help build adjacency
+int dist[MAXN];          // Distance array for BFS
+int queue[MAXN];         // Simple queue for BFS
 
-int max(int a, int b) {
-    return a > b ? a : b;
+// BFS from a source node to compute distances to all others
+long long bfs(int start, int N) {
+    memset(dist, -1, sizeof(dist));
+    int front = 0, rear = 0;
+    queue[rear++] = start;
+    dist[start] = 0;
+
+    long long sum = 0;
+
+    while (front < rear) {
+        int u = queue[front++];
+        for (int i = 0; i < degree[u]; i++) {
+            int v = adj[u][i];
+            if (dist[v] == -1) {
+                dist[v] = dist[u] + 1;
+                queue[rear++] = v;
+                sum += dist[v];
+            }
+        }
+    }
+
+    return sum;
 }
 
 int main() {
@@ -17,60 +40,31 @@ int main() {
     while (T--) {
         int N;
         scanf("%d", &N);
-        for (int i = 0; i < N; ++i)
-            scanf("%d", &A[i]);
 
-        // Initialize dp with -1e18 (very small), except dp[0][0] = 0
-        for (int i = 0; i <= 2 * N; ++i)
-            for (int j = 0; j <= N; ++j)
-                dp[i][j] = -1e18;
-        dp[0][0] = 0;
-
-        for (int i = 0; i < N; ++i) {
-            // Create new dp for current step
-            long long new_dp[2 * MAXN + 1][MAXN];
-            for (int k = 0; k <= 2 * N; ++k)
-                for (int x = 0; x <= N; ++x)
-                    new_dp[k][x] = -1e18;
-
-            for (int k = 0; k <= 2 * N; ++k) {
-                for (int x = 0; x <= N; ++x) {
-                    if (dp[k][x] == -1e18) continue;
-
-                    // 1. Do nothing
-                    if (new_dp[k][x] < dp[k][x])
-                        new_dp[k][x] = dp[k][x];
-
-                    // 2. Pay 1 coin
-                    if (k + 1 <= 2 * N)
-                        if (new_dp[k + 1][x + 1] < dp[k][x] + A[i])
-                            new_dp[k + 1][x + 1] = dp[k][x] + A[i];
-
-                    // 3. Pay 2 coins
-                    if (k + 2 <= 2 * N)
-                        if (new_dp[k + 2][x + 1] < dp[k][x] + A[i] + x)
-                            new_dp[k + 2][x + 1] = dp[k][x] + A[i] + x;
-                }
-            }
-
-            // Copy back new_dp to dp
-            for (int k = 0; k <= 2 * N; ++k)
-                for (int x = 0; x <= N; ++x)
-                    dp[k][x] = new_dp[k][x];
+        // Reset adjacency list and degree
+        for (int i = 1; i <= N; i++) {
+            degree[i] = 0;
         }
 
-        // For each K = 1 to 2N, find max over all x
-        for (int k = 1; k <= 2 * N; ++k) {
-            long long ans = 0;
-            for (int x = 0; x <= N; ++x) {
-                if (dp[k][x] > ans)
-                    ans = dp[k][x];
-            }
-            printf("%lld ", ans);
+        for (int i = 0; i < N - 1; i++) {
+            int u, v;
+            scanf("%d %d", &u, &v);
+            adj[u][degree[u]++] = v;
+            adj[v][degree[v]++] = u;
         }
-        printf("\n");
+
+        long long total_distance = 0;
+
+        // Run BFS from every node to get distances
+        for (int i = 1; i <= N; i++) {
+            total_distance += bfs(i, N);
+        }
+
+        long long total_pairs = (long long)N * (N + 1) / 2;
+        long long score = total_distance + total_pairs;
+
+        printf("%lld\n", score);
     }
 
     return 0;
 }
-

@@ -1,26 +1,46 @@
-#include <iostream>
-using namespace std;
+#include <stdio.h>
+
+// Function to count odd and even divisors of N
+void countDivisors(int N, int *odd, int *even) {
+    *odd = 0;
+    *even = 0;
+
+    for (int i = 1; i <= N; i++) {
+        if (N % i == 0) {
+            if (i % 2 == 0)
+                (*even)++;
+            else
+                (*odd)++;
+        }
+    }
+}
 
 int main() {
     int T;
-    cin >> T;  // Read the number of test cases
+    scanf("%d", &T);  // Number of test cases
 
-    // Loop through all test cases
     while (T--) {
-        int N, K;
-        cin >> N >> K;  // Read the number of episodes and the duration of each episode in minutes
-        
-        // Calculate total time in minutes
-        int totalMinutes = N * K;
-        
-        // Convert total minutes to hours and remaining minutes
-        int hours = totalMinutes / 60;
-        int minutes = totalMinutes % 60;
-        
-        // Output the result in the format: H M
-        cout << hours << " " << minutes << endl;
+        int A, B;
+        scanf("%d %d", &A, &B);  // Read A and B
+
+        int found = 0;
+
+        // Try numbers from 1 to 1000 to find a valid N
+        for (int N = 1; N <= 1000; N++) {
+            int odd = 0, even = 0;
+            countDivisors(N, &odd, &even);
+
+            if (odd == A && even == B) {
+                found = 1;
+                break;
+            }
+        }
+
+        if (found)
+            printf("Yes\n");
+        else
+            printf("No\n");
     }
 
     return 0;
 }
-

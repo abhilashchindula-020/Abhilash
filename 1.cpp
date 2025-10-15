@@ -1,27 +1,26 @@
-#include <iostream>
-#include <vector>
-
-using namespace std;
+#include <stdio.h>
 
 int main() {
-    int T;
-    cin >> T;  // Read the number of test cases
-    
+    int T, N;
+    scanf("%d", &T); // Read number of test cases
+
     while (T--) {
-        int N, M;
-        cin >> N >> M;  // Read N (size of the array) and M (modulo value)
-        
-        vector<int> A(N);
-        
-        // Read the array elements
-        for (int i = 0; i < N; i++) {
-            cin >> A[i];
+        scanf("%d", &N); // Read value of N for each test case
+
+        int odd = 0, even = 0;
+
+        for (int i = 1; i <= N; i++) {
+            if (N % i == 0) {
+                if (i % 2 == 0)
+                    even++;
+                else?
+                    odd++;?
         }
-        
-        // The minimum sum will always be 0 after performing enough operations
-        cout << 0 << endl;
+
+        // Print odd and even divisor counts
+        printf("%d %d\n", odd, even);
     }
-    
+
     return 0;
 }
-
+?

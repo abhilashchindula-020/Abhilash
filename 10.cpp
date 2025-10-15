@@ -1,14 +1,19 @@
-# cook your dish here
-# Read input
-A, B, C = map(int, input().split())
+#include <stdio.h>
 
-# Calculate areas
-rectangle_area = A * B
-square_area = C * C
+int main() {
+    int T;
+    scanf("%d", &T);
 
-# Compare and print result
-if rectangle_area == square_area:
-    print("Yes")
-else:
-    print("No")
+    while (T--) {
+        long long A, B;
+        scanf("%lld %lld", &A, &B);
 
+        if (A == 0) {
+            printf("No\n");
+        } else {
+            printf("Yes\n");
+        }
+    }
+
+    return 0;
+}

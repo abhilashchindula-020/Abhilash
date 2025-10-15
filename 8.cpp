@@ -1,22 +1,19 @@
-#include <iostream>
-using namespace std;
+#include <stdio.h>
 
 int main() {
     int T;
-    cin >> T;
-
+    scanf("%d", &T);
+    
     while (T--) {
         long long A, B;
-        cin >> A >> B;
-
+        scanf("%lld %lld", &A, &B);
+        
         if (A == 0) {
-            cout << "No" << endl;
+            printf("No\n");
         } else {
-            cout << "Yes" << endl;
+            printf("Yes\n");
         }
     }
-
+    
     return 0;
 }
-
-
